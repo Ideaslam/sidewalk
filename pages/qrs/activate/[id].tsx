@@ -6,7 +6,7 @@ import type {
 import { Qr } from "../../../types/qr";
 import Layout from "../../../components/Layout";
 import config from "../../../config";
-var baseUrl= config.BaseUrl; 
+var baseUrl = config.BaseUrl;
 
 
 type PageParams = {
@@ -17,7 +17,7 @@ type ContentPageProps = {
     qr: Qr;
 }
 
- 
+
 type ResponseFromServer = {
     code: string;
     times: number;
@@ -30,8 +30,8 @@ export async function getStaticProps({
     params
 }: GetStaticPropsContext<PageParams>): Promise<GetStaticPropsResult<ContentPageProps>> {
     try {
-        
-        let response = await fetch(baseUrl+'/api/qr/getQr?id=' + params?.id);
+
+        let response = await fetch(baseUrl + '/api/qr/getQr?id=' + params?.id);
         console.log(response)
         let responseFromServer: ResponseFromServer = await response.json();
         console.log(responseFromServer)
@@ -41,7 +41,7 @@ export async function getStaticProps({
                 qr: {
                     _id: responseFromServer._id,
                     code: responseFromServer.code,
-                    times: responseFromServer.times, 
+                    times: responseFromServer.times,
                 }
             },
         }
@@ -52,7 +52,7 @@ export async function getStaticProps({
                 qr: {
                     _id: '',
                     code: '',
-                  
+
                     times: 0
                 }
             }
@@ -62,25 +62,35 @@ export async function getStaticProps({
 }
 
 export async function getStaticPaths() {
-     
 
-    let qrs = await fetch(baseUrl+'/api/qr/getQrs');
+    try {
+        let qrs = await fetch(baseUrl + '/api/qr/getQrs');
 
-    let qrFromServer: [Qr] = await qrs.json();
-    return {
-        paths: qrFromServer.map((qr) => {
-            return {
-                params: {
-                    id: qr._id
+        let qrFromServer: [Qr] = await qrs.json();
+        return {
+            paths: qrFromServer.map((qr) => {
+                return {
+                    params: {
+                        id: qr._id
+                    }
                 }
-            }
-        }),
-        fallback: false, // can also be true or 'blocking'
+            }),
+            fallback: false, // can also be true or 'blocking'
+        }
+
+
+    }
+    catch (e) {
+        console.log('error ', e);
+        return {
+            paths: [],
+            fallback: false, // can also be true or 'blocking'
+        }
     }
 }
 
 export default function ActivateQr({ qr: { _id, name, phone } }: ContentPageProps) {
-     
+
     const [qrName, setQrName] = useState(name);
     const [qrPhone, setQrPhone] = useState(phone);
     const [error, setError] = useState('');
@@ -91,7 +101,7 @@ export default function ActivateQr({ qr: { _id, name, phone } }: ContentPageProp
         if (qrName && qrPhone) {
             console.log(qrName)
             try {
-                let response = await fetch(baseUrl+'/api/qr/activateQr?id=' + _id, {
+                let response = await fetch(baseUrl + '/api/qr/activateQr?id=' + _id, {
                     method: 'POST',
                     body: JSON.stringify({
                         name: qrName,
@@ -116,8 +126,8 @@ export default function ActivateQr({ qr: { _id, name, phone } }: ContentPageProp
     }
 
     // no such post exists
-    if (!qrName && !qrPhone && !_id && process.browser) { 
-       // return window.location.href = '/';
+    if (!qrName && !qrPhone && !_id && process.browser) {
+        // return window.location.href = '/';
     }
 
     return (
@@ -155,7 +165,7 @@ export default function ActivateQr({ qr: { _id, name, phone } }: ContentPageProp
                     />
                 </div>
 
-              
+
                 <div className="form-group">
                     <button type="submit" className="submit_btn">Activate</button>
                 </div>

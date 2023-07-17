@@ -7,7 +7,7 @@ import Layout from '../../components/Layout';
 import { Qr } from "../../types/qr";
 import config from "../../config";
 
-var baseUrl=config.BaseUrl;
+var baseUrl = config.BaseUrl;
 
 type PageParams = {
     id: string
@@ -17,7 +17,7 @@ type ContentPageProps = {
     qr: Qr;
 }
 
- 
+
 type ResponseFromServer = {
     code: string;
     times: number;
@@ -29,7 +29,7 @@ export async function getStaticProps({
 }: GetStaticPropsContext<PageParams>): Promise<GetStaticPropsResult<ContentPageProps>> {
     try {
         console.log('num1 ')
-        let response = await fetch(baseUrl+'/api/qr/getQr?id=' + params?.id);
+        let response = await fetch(baseUrl + '/api/qr/getQr?id=' + params?.id);
 
         let responseFromServer: ResponseFromServer = await response.json();
         console.log(responseFromServer)
@@ -59,21 +59,29 @@ export async function getStaticProps({
 }
 
 export async function getStaticPaths() {
- 
 
-    let qrs = await fetch(baseUrl+'/api/qr/getQrs');
+    try {
+        let qrs = await fetch(baseUrl + '/api/qr/getQrs');
 
-    let qrFromServer: [Qr] = await qrs.json();
-    return {
-        paths: qrFromServer.map((qr) => {
-            return {
-                params: {
-                    id: qr._id
+        let qrFromServer: [Qr] = await qrs.json();
+        return {
+            paths: qrFromServer.map((qr) => {
+                return {
+                    params: {
+                        id: qr._id
+                    }
                 }
-            }
-        }),
-        fallback: false, // can also be true or 'blocking'
+            }),
+            fallback: false, // can also be true or 'blocking'
+        }
+    } catch (e) {
+        console.log('error ', e);
+        return {
+            paths: [],
+            fallback: false, // can also be true or 'blocking'
+        }
     }
+
 }
 
 export default function EditQr({ qr: { _id, code, times } }: ContentPageProps) {
@@ -87,7 +95,7 @@ export default function EditQr({ qr: { _id, code, times } }: ContentPageProps) {
         e.preventDefault();
         if (qrCode && qrTimes) {
             try {
-                let response = await fetch(baseUrl+'/api/qr/editQr?id=' + _id, {
+                let response = await fetch(baseUrl + '/api/qr/editQr?id=' + _id, {
                     method: 'POST',
                     body: JSON.stringify({
                         code: qrCode,
@@ -116,7 +124,7 @@ export default function EditQr({ qr: { _id, code, times } }: ContentPageProps) {
         console.log(qrCode)
         console.log(qrTimes)
         console.log(_id)
-       // return window.location.href = '/';
+        // return window.location.href = '/';
     }
 
     return (
@@ -146,11 +154,11 @@ export default function EditQr({ qr: { _id, code, times } }: ContentPageProps) {
                 </div>
                 <div className="form-group">
                     <label>Times</label>
-                    <input type="number" 
+                    <input type="number"
                         onChange={e => setQrTimes(e.target.valueAsNumber)}
                         value={qrTimes ? qrTimes : 0}
                     />
- 
+
                 </div>
                 <div className="form-group">
                     <button type="submit" className="submit_btn">Update</button>

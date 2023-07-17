@@ -21,19 +21,27 @@ type ContentPageProps = {
 
 export async function getStaticPaths() {
 
+    try {
+        let qrs = await fetch(baseUrl + '/api/qr/getQrs');
 
-    let qrs = await fetch(baseUrl + '/api/qr/getQrs');
-
-    let qrFromServer: [Qr] = await qrs.json();
-    return {
-        paths: qrFromServer.map((qr) => {
-            return {
-                params: {
-                    code: qr.code
+        let qrFromServer: [Qr] = await qrs.json();
+        return {
+            paths: qrFromServer.map((qr) => {
+                return {
+                    params: {
+                        code: qr.code
+                    }
                 }
-            }
-        }),
-        fallback: false, // can also be true or 'blocking'
+            }),
+            fallback: false, // can also be true or 'blocking'
+        }
+
+    } catch (e) {
+        console.log('error ', e);
+        return {
+            paths: [],
+            fallback: false, // can also be true or 'blocking'
+        }
     }
 }
 
@@ -107,16 +115,16 @@ export default function InformUser({ code }: any) {
                 </div>
             </div>
             <div className="row">
-              
-                    <div className="col-12 col-md-4">
-                        Please inform the car owner to relocate their vehicle if it is not parked in a suitable place.
-                    </div>
 
-                    <div className="col-12 col-md-6">
-                        <h2>{message == "" ? <button className="btn btn-danger" onClick={handleInformUser}>Inform User</button> : message}</h2>
-                        <p>{error ?? ''}</p>
-                    </div>
-                
+                <div className="col-12 col-md-4">
+                    Please inform the car owner to relocate their vehicle if it is not parked in a suitable place.
+                </div>
+
+                <div className="col-12 col-md-6">
+                    <h2>{message == "" ? <button className="btn btn-danger" onClick={handleInformUser}>Inform User</button> : message}</h2>
+                    <p>{error ?? ''}</p>
+                </div>
+
 
             </div>
 
