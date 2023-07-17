@@ -24,7 +24,7 @@ type ResponseFromServer = {
     _id: string
 }
 
-export async function getStaticProps({
+export async function getServerSideProps({
     params
 }: GetStaticPropsContext<PageParams>): Promise<GetStaticPropsResult<ContentPageProps>> {
     try {
@@ -57,32 +57,7 @@ export async function getStaticProps({
     }
 
 }
-
-export async function getStaticPaths() {
-
-    try {
-        let qrs = await fetch(baseUrl + '/api/qr/getQrs');
-
-        let qrFromServer: [Qr] = await qrs.json();
-        return {
-            paths: qrFromServer.map((qr) => {
-                return {
-                    params: {
-                        id: qr._id
-                    }
-                }
-            }),
-            fallback: false, // can also be true or 'blocking'
-        }
-    } catch (e) {
-        console.log('error ', e);
-        return {
-            paths: [],
-            fallback: false, // can also be true or 'blocking'
-        }
-    }
-
-}
+ 
 
 export default function EditQr({ qr: { _id, code, times } }: ContentPageProps) {
     console.log(code)

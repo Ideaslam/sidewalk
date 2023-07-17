@@ -18,34 +18,9 @@ type PageParams = {
 type ContentPageProps = {
     code: string
 }
+ 
 
-export async function getStaticPaths() {
-
-    try {
-        let qrs = await fetch(baseUrl + '/api/qr/getQrs');
-
-        let qrFromServer: [Qr] = await qrs.json();
-        return {
-            paths: qrFromServer.map((qr) => {
-                return {
-                    params: {
-                        code: qr.code
-                    }
-                }
-            }),
-            fallback: false, // can also be true or 'blocking'
-        }
-
-    } catch (e) {
-        console.log('error ', e);
-        return {
-            paths: [],
-            fallback: false, // can also be true or 'blocking'
-        }
-    }
-}
-
-export async function getStaticProps({ params }: GetStaticPropsContext<PageParams>): Promise<GetStaticPropsResult<ContentPageProps>> {
+export async function getServerSideProps({ params }: GetStaticPropsContext<PageParams>): Promise<GetStaticPropsResult<ContentPageProps>> {
     try {
 
         console.log(params?.code)
