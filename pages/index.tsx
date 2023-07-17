@@ -70,12 +70,9 @@ export default function Qrs(props: Props) {
                           <p>User Usage :<b> {qr.userTimes ?? 0}</b></p>
                         </div>
                         <div className="col-6">
-                          <QrCode> {baseUrl+'/qrs/inform?code='+qr.code}</QrCode>
+                          <QrCode> {baseUrl+'/qrs/inform/'+qr.code}</QrCode>
                         </div>
-                      
-
-
-
+                       
                     </div>
                     <div className="qr-item-actions">
                       <a href={`/qrs/${qr._id} `}>Edit</a>
