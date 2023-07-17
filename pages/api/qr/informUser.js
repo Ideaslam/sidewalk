@@ -1,6 +1,7 @@
 
 import clientPromise from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
+import {  TwilioService } from '../../../utils/twilio';
 
 export default async (req, res) => {
     try {
@@ -15,6 +16,17 @@ export default async (req, res) => {
 
 
         // Send SMS
+        var smsStatus=false ;
+        try{
+            var service =new TwilioService(); 
+            var response=  await service.sendSms(qr.phone,"Please Move Your Car");
+            console.log(response.sid) ;
+            smsStatus=true; 
+        }catch(error){
+
+            console.error(error.message)
+        }
+       
 
         var updatedQr  =null ;
         if (qr) {
@@ -28,7 +40,8 @@ export default async (req, res) => {
                     $push: {
 
                         scans: {
-                            datetime: new Date()
+                            datetime: new Date() ,
+                            smsStatus :smsStatus
                         }
                     }
                 }
