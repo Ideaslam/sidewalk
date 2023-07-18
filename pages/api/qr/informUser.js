@@ -1,37 +1,51 @@
 
 import clientPromise from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
-import {  TwilioService } from '../../../utils/twilio';
+import { TwilioService } from '../../../utils/twilio';
 
 export default async (req, res) => {
     try {
         const client = await clientPromise;
         const db = client.db("qrs");
-        const { code } = req.query; 
+        const { code } = req.query;
 
-        console.log('User informing')
         const qr = await db.collection("qrs").findOne({
-            code : code
+            code: code
         })
 
 
+
+        // check if pcakage is valid
+        if (qr.userTimes >= qr.times) {
+           
+            throw new  Error ("Package Balance is zero"); 
+          
+        }
+
+
         // Send SMS
-        var smsStatus=false ;
-        try{
-            var service =new TwilioService(); 
-            var response=  await service.sendSms(qr.phone,"Please Move Your Car");
-            console.log(response.sid) ;
-            smsStatus=true; 
-        }catch(error){
+        var smsStatus = false;
+        var message = "Please Move Your Car";
+        try {
+
+            if (qr.userTimes + 1 == qr.times) {
+                message = "Please Move Your Car ,Extend your package for more scans"
+            }
+
+            var service = new TwilioService();
+            var response = await service.sendSms(qr.phone, message);
+            console.log(response.sid);
+            smsStatus = true;
+        } catch (error) {
 
             console.error(error.message)
         }
-       
 
-        var updatedQr  =null ;
+
+        var updatedQr = null;
         if (qr) {
             updatedQr = await db.collection("qrs").updateOne({
-                code : code
+                code: code
             },
                 {
                     $inc: {
@@ -40,8 +54,9 @@ export default async (req, res) => {
                     $push: {
 
                         scans: {
-                            datetime: new Date() ,
-                            smsStatus :smsStatus
+                            datetime: new Date(),
+                            smsStatus: smsStatus,
+                            message: message
                         }
                     }
                 }
@@ -52,8 +67,8 @@ export default async (req, res) => {
         res.json(qr);
 
 
-    } catch (e) {
-        console.error(e);
-        throw new Error(e).message;
+    } catch (err) {
+        console.error(err); 
+        res.status(500).send(err.message);
     }
 }

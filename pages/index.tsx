@@ -54,8 +54,7 @@ export default function Qrs(props: Props) {
 
   return (
     <Layout>
-      <div className="qrs-body">
-        <h1 className="qrs-body-heading">QRs</h1>
+      <div className="qrs-body"> 
         {
           qrs.length > 0 ? (
             <ul className="qrs-list">

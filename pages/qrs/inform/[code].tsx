@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
+import ErrorBoundary from '../../../components/ErrorHandling';
 import type {
     GetStaticPropsContext,
     GetStaticPropsResult,
@@ -18,7 +19,7 @@ type PageParams = {
 type ContentPageProps = {
     code: string
 }
- 
+
 
 export async function getServerSideProps({ params }: GetStaticPropsContext<PageParams>): Promise<GetStaticPropsResult<ContentPageProps>> {
     try {
@@ -60,11 +61,15 @@ export default function InformUser({ code }: any) {
                         'Content-Type': 'application/json'
                     }
                 });
+                if (!response.ok) {
+                    throw new Error((await response.text()))
+                }
+
                 response = await response.json();
                 setError('');
                 setMessage('The User is Informed');
-            } catch (errorMessage: any) {
-                setError(errorMessage);
+            } catch (error: any) {
+                setError(error.message);
             }
         } else {
             return setError('All fields are required')
@@ -89,18 +94,18 @@ export default function InformUser({ code }: any) {
 
                 </div>
             </div>
-            <div className="row">
-
+            <div className="row"> 
                 <div className="col-12 col-md-4">
                     Please inform the car owner to relocate their vehicle if it is not parked in a suitable place.
                 </div>
 
-                <div className="col-12 col-md-6">
-                    <h2>{message == "" ? <button className="btn btn-danger" onClick={handleInformUser}>Inform User</button> : message}</h2>
-                    <p>{error ?? ''}</p>
-                </div>
-
-
+                <div className="col-12 col-md-6"> 
+                    <h2>{message == "" ? <button className="btn btn-danger" 
+                    onClick={handleInformUser}>Inform User</button> : message}</h2>
+                      
+                    <p>{error ?? ""}</p>
+                 
+                </div> 
             </div>
 
             <style jsx>
@@ -109,8 +114,7 @@ export default function InformUser({ code }: any) {
                     .container{
                         margin:auto
                     }
-
-
+ 
                     `
                 }
             </style>
