@@ -3,7 +3,6 @@ import { useState } from 'react';
 import QrCode from '../components/QrCode';
 import { Qr } from '../types/qr';
 import config from '../config'; 
-import AuthButtons from '../components/AuthButtons';
  
 
 
@@ -56,7 +55,9 @@ export default function Qrs(props: Props) {
   }
 
   return (
-    <Layout> 
+    <Layout>
+
+    
       <div className="qrs-body"> 
         {
           qrs.length > 0 ? (

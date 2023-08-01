@@ -1,10 +1,9 @@
-// components/Layout.tsx
+// components/AuthButtons.tsx
 import { useEffect, useState } from 'react';
 import keycloak from '../utils/keycloakConfig';
-import Nav from './Nav';
-import AuthButtons from './AuthButtons';
+ 
 
-const Layout = ({ children }:any) => {
+const AuthButtons = () => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -18,9 +17,7 @@ const Layout = ({ children }:any) => {
       }
     };
 
-    // Call checkAuth initially
     checkAuth();
-  
   }, []);
 
   const handleLogin = async () => {
@@ -28,21 +25,19 @@ const Layout = ({ children }:any) => {
     (await keycloak()).login();
   };
 
+  const handleLogout =async  () => {
+    (await keycloak()).logout();
+  };
+
   return (
     <div>
-      <Nav></Nav>
       {authenticated ? (
-        // Render the children only when the user is authenticated
-        <>{children}</>
+        <button onClick={handleLogout}>Logout</button>
       ) : (
-        // Render a message or component when the user is not authenticated
-        <div>
-          <p>You need to log in to access this content.</p> 
-          <button onClick={handleLogin}>Login</button>
-        </div>
+        <button onClick={handleLogin}>Login</button>
       )}
     </div>
   );
 };
 
-export default Layout;
+export default AuthButtons;

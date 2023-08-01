@@ -8,6 +8,7 @@ export   class TwilioService {
  
 
     constructor(){
+      
           this.accountSid = process.env.TWILIO_ACCOUNT_SID;
           this.authToken = process.env.TWILIO_AUTH_TOKEN;
           this.twilioNumber = process.env.TWILIO_PHONE_NUMBER;
