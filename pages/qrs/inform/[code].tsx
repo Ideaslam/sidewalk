@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import ErrorBoundary from '../../../components/ErrorHandling';
+ 
 import type {
     GetStaticPropsContext,
     GetStaticPropsResult,
