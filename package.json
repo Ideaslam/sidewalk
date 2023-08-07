@@ -8,6 +8,7 @@
   "dependencies": {
     "@react-keycloak/ssr": "^3.3.0",
     "@react-keycloak/web": "^3.4.0",
+    "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
     "cookies-next": "^2.1.2",
     "jose": "^4.14.4",
