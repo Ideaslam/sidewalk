@@ -2,8 +2,7 @@ import Layout from '../components/Layout';
 import { useState } from 'react';
 import QrCode from '../components/QrCode';
 import { Qr } from '../types/qr';
-import config from '../config'; 
-import AuthButtons from '../components/AuthButtons';
+import config from '../config';  
  
 
 
