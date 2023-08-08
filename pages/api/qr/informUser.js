@@ -46,7 +46,7 @@ export default async (req, res) => {
 
             console.error(error.message)
             error = error.message ; 
-            res.status(500).send(err.message);
+          
             
         }
 
@@ -74,9 +74,7 @@ export default async (req, res) => {
 
         }
 
-        if(error){
-            res.status(500).send(error);
-        }
+      
 
         res.json(qr);
 
