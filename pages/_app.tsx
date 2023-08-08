@@ -5,7 +5,7 @@ import initKeycloak from '../utils/keycloakConfig';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    initKeycloak(); // Initialize Keycloak only on the client-side
+   // initKeycloak(); // Initialize Keycloak only on the client-side
   }, []);
 
   return <Component {...pageProps} />;

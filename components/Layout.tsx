@@ -8,15 +8,15 @@ const Layout = ({ children }:any) => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      if ((await keycloak()).authenticated) {
-        console.log('User is authenticated.');
-        setAuthenticated(true);
-      } else {
-        console.log('User is not authenticated.');
-        setAuthenticated(false);
-      }
-    };
+    // const checkAuth = async () => {
+    //   if ((await keycloak()).authenticated) {
+    //     console.log('User is authenticated.');
+    //     setAuthenticated(true);
+    //   } else {
+    //     console.log('User is not authenticated.');
+    //     setAuthenticated(false);
+    //   }
+    // };
 
     // Call checkAuth initially
    // checkAuth();
