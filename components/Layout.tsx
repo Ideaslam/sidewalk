@@ -19,7 +19,7 @@ const Layout = ({ children }:any) => {
     };
 
     // Call checkAuth initially
-    checkAuth();
+   // checkAuth();
   
   }, []);
 
